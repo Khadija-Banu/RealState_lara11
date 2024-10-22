@@ -2,7 +2,7 @@
 @section('admin')
 
 <div class="page-content">
-
+    @include('message')
 
     <div class="row profile-body">
         <!-- left wrapper start -->
@@ -49,38 +49,48 @@
 
                             <h6 class="card-title">Profile Update</h6>
 
-                            <form class="forms-sample" action="" method="POST">
+                            <form class="forms-sample" action="{{route('admin.profile.update')}}" method="POST" enctype="multipart/form-data">
+                                @csrf
                                 <div class="mb-3">
                                     <label class="form-label">Name</label>
-                                    <input type="text" name="name" class="form-control" placeholder="Name">
+                                    <input type="text" name="name" class="form-control" placeholder="Name" value="{{$user->name}}">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Username</label>
-                                    <input type="text" name="username" class="form-control" placeholder="Username">
+                                    <input type="text" name="username" class="form-control" placeholder="Username" value="{{$user->username}}">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Email address</label>
-                                    <input type="email" class="form-control" placeholder="Email">
+                                    <input type="email" name="email"  class="form-control" placeholder="Email" value="{{$user->email}}">
+                                    <span style="color:red;">{{ $errors->first('email') }}</span>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Phone</label>
+                                    <input type="text" name="phone" class="form-control" placeholder="phone" value="{{$user->phone}}">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Password</label>
-                                    <input type="password" name="password" class="form-control" placeholder="Password">
+                                    <input type="password" name="password" class="form-control" placeholder="Password" >
+                                    (Leave blank if you are not changing the password)
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Profile Image</label>
                                     <input type="file" name="photo" class="form-control">
+                                    @if(!empty($user->photo))
+                                    <img src="{{asset('upload/'.$user->photo)}}" alt="" style="width:10%; height:10%">
+                                    @endif
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Address</label>
-                                    <input type="text" name="address" class="form-control" placeholder="Address">
+                                    <input type="text" name="address" class="form-control" placeholder="Address" value="{{$user->address}}">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Website</label>
-                                    <input type="text" name="website" class="form-control" placeholder="Website">
+                                    <input type="text" name="website" class="form-control" placeholder="Website" value="{{$user->website}}">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">About</label>
-                                    <textarea name="about" class="form-control" placeholder="About"></textarea>
+                                    <textarea name="about" class="form-control" placeholder="About">{{$user->about}}</textarea>
 
                                 </div>
 

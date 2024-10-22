@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
+use App\Models\User;
+use Hash;
+use Str;
 
 class AdminController extends Controller
 {
@@ -25,6 +28,36 @@ class AdminController extends Controller
     }
 
     public function AdminProfile(Request $request){
-        return view('admin.admin_profile');
+        $user = User::find(Auth::user()->id);
+        return view('admin.admin_profile',compact('user'));
+    }
+
+    public function AdminProfileUpdate(Request $request){
+
+        $user = request()->validate([
+            'email' => 'required|unique:users,email,'.Auth::user()->id
+        ]);
+        $user = User::find(Auth::user()->id);
+        
+        $user->name     = trim($request->name);
+        $user->username = trim($request->username);
+        $user->email    = trim($request->email);
+        $user->phone    = trim($request->phone);
+        if(!empty($request->password)){
+            $user->password = Hash::make($request->password);
+        }
+        if(!empty($request->file('photo'))){
+            $file = $request->file('photo');
+            $randomStr = Str::random(30);
+            $filename = $randomStr.'.'.$file->getClientOriginalExtension();
+            $file->move('upload/', $filename);
+            $user->photo = $filename;
+        }
+        $user->address  = trim($request->address);
+        $user->about    = trim($request->about);
+        $user->website  = trim($request->website);
+        $user->save();
+
+        return redirect('admin/profile')->with('success', 'Profile Update Successfully');
     }
 }
